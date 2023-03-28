@@ -8,8 +8,10 @@ export default function Map() {
 	const [data, setData] = useState(null);
   	const [loading, setLoading] = useState(true);
   	const [error, setError] = useState(null);
+	
   	const url =
     'https://corsproxy.io/?' + encodeURIComponent('https://passio3.com/');
+
   	useEffect(() => {
     fetch(url + `/harvard/passioTransit/gtfs/realtime/vehiclePositions.json`)
       .then((response) => response.json())
@@ -22,6 +24,7 @@ export default function Map() {
         console.error(`An error occurred: ${e}`);
       });
   	  }, []);
+	  
 	return (
 		<div className="Map">
         	{loading && <p>Loading...</p>}
