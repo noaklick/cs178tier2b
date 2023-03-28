@@ -5,20 +5,19 @@ import { myKey } from './config';
 function App() {
 
     const containerStyle = {
-        width: '400px',
-        height: '400px'
+        width: '1000px',
+        height: '1000px'
     };
 
     const center = {
-        lat: -3.745,
-        lng: -38.523
+        lat: 42.372660,
+        lng: -71.118660
     };
     // Objects for each of the feeds we ingest from PassioGo endpoint
-    const [feed, setFeed] = useState({
-        serviceAlerts: {},
-        tripUpdates: {},
-        vehiclePositions: {}
-    });
+    const [vehiclePositions, setVehiclePositions] = useState({});
+    const [serviceAlerts, setServiceAlerts] = useState({});
+    const [tripUpdates, setTripUpdates] = useState({});
+    const [dataLoading, setLoading] = useState(true);
 
     const { isLoaded } = useJsApiLoader({
         id: 'google-map-script',
@@ -31,6 +30,18 @@ function App() {
         // This is just an example of getting and using the map instance!!! don't just blindly copy!
         const bounds = new window.google.maps.LatLngBounds(center);
         map.fitBounds(bounds);
+        refreshFeeds();
+        console.log("on load");
+        console.log(vehiclePositions);
+        if (!dataLoading) {
+            console.log("loaded something");
+            new window.google.maps.Marker({
+                position: {lat: vehiclePositions[0]['vehicle']['position']['latitude'], 
+                           lng: vehiclePositions[0]['vehicle']['position']['longitude']},
+                map,
+                title: "Hello World!",
+            });
+        }
 
         setMap(map)
     }, []);
@@ -51,12 +62,14 @@ function App() {
             const jsonUpdates = await resUpdates.json();
 
             console.log(jsonPositions);
+            setLoading(false);
 
-            setFeed({
-                serviceAlerts: jsonAlerts,
-                tripUpdates: jsonUpdates,
-                vehiclePositions: jsonPositions
-            })
+            setServiceAlerts(jsonAlerts['entity']);
+            setTripUpdates(jsonUpdates);
+            setVehiclePositions(jsonPositions);
+            
+            console.log("data loading");
+            console.log(dataLoading)
 
         } catch (e) {
             console.error(`An error occurred: ${e}`);
@@ -75,16 +88,16 @@ function App() {
         };
     }, []);
 
-    console.log(feed)
+    //console.log(vehiclePositions)
 
     return (
         <div>
-            <p>Hello World</p>
-            {isLoaded && (
+            <p>Welcome to HarvHop!</p>
+            {isLoaded && !dataLoading && (
              <GoogleMap
              mapContainerStyle={containerStyle}
              center={center}
-             zoom={10}
+             zoom={15}
              onLoad={onLoad}
              onUnmount={onUnmount}>
              <></>
