@@ -3,6 +3,7 @@ import React from 'react';
 // loops: Emilio DeLeon
 import { useState, useEffect } from 'react';
 
+
 export default function Map() {
 	// fetching code from Kian Attari
 	const [data, setData] = useState(null);
