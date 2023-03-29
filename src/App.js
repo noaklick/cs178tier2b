@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Map from "./containers/Map";
 
 function App() {
     // Objects for each of the feeds we ingest from PassioGo endpoint
@@ -7,6 +8,7 @@ function App() {
         tripUpdates: {},
         vehiclePositions: {}
     });
+    const [dataLoading, setLoading] = useState(true);
 
     // Makes call to PassioGo endpoint and refreshes PassioGo feeds
     const refreshFeeds = async () => {
@@ -20,6 +22,7 @@ function App() {
             const jsonUpdates = await resUpdates.json();
 
             console.log(jsonPositions);
+            setLoading(false);
 
             setFeed({
                 serviceAlerts: jsonAlerts,
@@ -47,9 +50,10 @@ function App() {
     console.log(feed)
 
     return (
-        <div>
-            Hello World
-        </div>
+        <Map
+            feed={feed}
+            dataLoading={dataLoading}
+        />
     );
 }
 
