@@ -1,0 +1,1 @@
+export const myKey = "AIzaSyC_YWStHKHOkwTOu4B8vfznl67jP1if5T4";
